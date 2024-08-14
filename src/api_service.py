@@ -19,11 +19,6 @@ class WebsiteAPI(ABC):
     """абстрактный класс для парсинга вакансий"""
 
     @abstractmethod
-    def get_employer_id(self, employer_name: str):
-        """Получение ID работодателя по имени"""
-        pass
-
-    @abstractmethod
     def get_vacancies_by_employer(self, employer_id: int):
         """Получение вакансий по ID работодателя"""
         pass
@@ -37,37 +32,12 @@ class HeadHunterAPI(WebsiteAPI):
         logger.info("получение информации о вакансиях")
         self.base_url = base_url
         self.headers = {"User-Agent": "HH-User-Agent"}
-        self.params = {"per_page": 10, "page": 0}
-        self.vacancies = []
 
-    def get_employer_id(self, employer_name: str):
-        """Получение ID работодателя по имени"""
-        search_url = f'{self.base_url}/employers'
-        params = {"text": employer_name}
-        try:
-            response = requests.get(url=search_url, headers=self.headers, params=params)
-            response.raise_for_status()
-            logger.info(f"Запрос успешно выполнен для поиска работодателя: {employer_name}")
-
-            data = response.json()
-            items = data.get("items", [])
-            if items:
-                return items[0]['id']
-            else:
-                logger.warning(f"Работодатель '{employer_name}' не найден")
-                return None
-
-        except requests.RequestException as e:
-            logger.error(f"Ошибка запроса к API при поиске работодателя: {e}")
-            raise
-
-    def get_vacancies_by_employer(self, employer_id: int):
+    def get_vacancies_by_employer(self, employer_id: int, per_page: int = 10):
         """Получение вакансий по ID работодателя"""
-        if not employer_id:
-            logger.error("ID работодателя не задан")
-            raise ValueError("ID работодателя не задан")
-        vacancies_url = f'{self.base_url}/vacancies'
-        params = {"employer_id": employer_id}
+
+        vacancies_url = f"{self.base_url}/vacancies"
+        params = {"employer_id": employer_id, "per_page": per_page}
         try:
             response = requests.get(url=vacancies_url, headers=self.headers, params=params)
             response.raise_for_status()
@@ -81,21 +51,24 @@ class HeadHunterAPI(WebsiteAPI):
             raise
 
 
+def fetch_vacancies_for_employers(api_instance: HeadHunterAPI, employer_ids: list, per_page: int = 10):
+    """Получить вакансии для списка работодателей"""
+    all_vacancies = []
+    for employer_id in employer_ids:
+        logger.info(f"Получение вакансий для работодателя ID {employer_id}")
+        vacancies = api_instance.get_vacancies_by_employer(employer_id, per_page)
+        all_vacancies.extend(vacancies)
+    return all_vacancies
+
+
 if __name__ == "__main__":
     load_dotenv()
     MY_BASE_URL = os.getenv("BASE_URL")
     hh_api = HeadHunterAPI(MY_BASE_URL)
 
     # Список работодателей для получения данных
-    employers = ["Company 1", "Company 2", "Company 3", "Company 4", "Company 5",
-                 "Company 6", "Company 7", "Company 8", "Company 9", "Company 10"]
+    employer_ids = [561525, 1721871, 10438139, 9740285, 4667763, 985552, 2628254, 8932785, 1178077, 1455]
 
-    for employer in employers:
-        employer_id = hh_api.get_employer_id(employer)
-        if employer_id:
-            vacancies = hh_api.get_vacancies_by_employer(employer_id)
-            print(f"Vacancies for {employer}:")
-            for vacancy in vacancies:
-                print(f"- {vacancy['name']}: {vacancy['alternate_url']}")
-        else:
-            print(f"No vacancies found for {employer}")
+    vacancies = fetch_vacancies_for_employers(hh_api, employer_ids, per_page=50)
+    for vacancy in vacancies:
+        print(vacancy)
