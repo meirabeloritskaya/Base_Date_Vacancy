@@ -8,8 +8,12 @@ def create_database(database_name: str, params: dict):
     conn.autocommit = True
     cur = conn.cursor()
 
-    cur.execute(f"DROP DATABASE {database_name}")
-    cur.execute(f"CREATE DATABASE {database_name}")
+    try:
+        cur.execute(f"DROP DATABASE {database_name}")
+    except Exception as e:
+        print(f'Информация: {e}')
+    finally:
+        cur.execute(f"CREATE DATABASE {database_name}")
 
     conn.close()
 
