@@ -51,7 +51,7 @@ class HeadHunterAPI(WebsiteAPI):
             raise
 
 
-def fetch_vacancies_for_employers(api_instance: HeadHunterAPI, employer_ids: list, per_page: int = 10):
+def employers_vacancies(api_instance: HeadHunterAPI, employer_ids: list, per_page: int = 10):
     """Получить вакансии для списка работодателей"""
     all_vacancies = []
     for employer_id in employer_ids:
@@ -69,6 +69,6 @@ if __name__ == "__main__":
     # Список работодателей для получения данных
     employer_ids = [561525, 1721871, 10438139, 9740285, 4667763, 985552, 2628254, 8932785, 1178077, 1455]
 
-    vacancies = fetch_vacancies_for_employers(hh_api, employer_ids, per_page=50)
+    vacancies = employers_vacancies(hh_api, employer_ids, per_page=50)
     for vacancy in vacancies:
         print(vacancy)
