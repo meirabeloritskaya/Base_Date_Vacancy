@@ -69,6 +69,6 @@ if __name__ == "__main__":
     # Список работодателей для получения данных
     employer_ids = [561525, 1721871, 10438139, 9740285, 4667763, 985552, 2628254, 8932785, 1178077, 1455]
 
-    vacancies = employers_vacancies(hh_api, employer_ids, per_page=50)
-    for vacancy in vacancies:
+    my_vacancies = employers_vacancies(hh_api, employer_ids, per_page=50)
+    for vacancy in my_vacancies:
         print(vacancy)
