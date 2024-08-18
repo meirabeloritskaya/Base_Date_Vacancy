@@ -1,7 +1,6 @@
-import logging
 import os
 from dotenv import load_dotenv
-from src.vacancy_api import HeadHunterAPI, fetch_vacancies_for_employers
+from src.vacancy_api import HeadHunterAPI, employers_vacancies
 from create_db import create_database, save_data_to_database
 from config import config
 
@@ -13,13 +12,13 @@ def main():
 
     # Список работодателей для получения данных
     employer_ids = [561525, 1721871, 10438139, 9740285, 4667763, 985552, 2628254, 8932785, 1178077, 1455]
-    data_vacancies = fetch_vacancies_for_employers(hh_api, employer_ids, per_page=50)
+    data_vacancies = employers_vacancies(hh_api, employer_ids, per_page=50)
 
     params = config()
-    create_database('vacancy_hh', params)
+    create_database("vacancy_hh", params)
 
-    save_data_to_database(data_vacancies, 'vacancy_hh', params)
+    save_data_to_database(data_vacancies, "vacancy_hh", params)
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     main()
