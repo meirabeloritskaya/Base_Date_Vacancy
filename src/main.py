@@ -10,17 +10,15 @@ def main():
     load_dotenv()
     MY_BASE_URL = os.getenv("BASE_URL")
     hh_api = HeadHunterAPI(MY_BASE_URL)
-
+    my_database_name = "vacancy_hh"
+    my_params = config()
     employer_ids = [561525, 1721871, 10438139, 9740285, 4667763, 985552, 2628254, 8932785, 1178077, 1455]
     data_vacancies = employers_vacancies(hh_api, employer_ids, per_page=50)
 
-    params = config()
-    create_database("vacancy_hh", params)
-    save_data_to_database(data_vacancies, "vacancy_hh", params)
+    create_database(my_database_name, my_params)
+    save_data_to_database(data_vacancies, "vacancy_hh", my_params)
 
-    my_database_name = "vacancy_hh"
-    db_params = config()
-    manager = VacanciesManager(my_database_name, db_params)
+    manager = VacanciesManager(my_database_name, my_params)
 
     print("_____________")
     print()
