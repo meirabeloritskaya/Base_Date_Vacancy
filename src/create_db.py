@@ -1,6 +1,6 @@
 import psycopg2
-from config import config
-from vacancy_api import HeadHunterAPI, employers_vacancies
+from src.config import config
+from src.vacancy_api import HeadHunterAPI, employers_vacancies
 import os
 from dotenv import load_dotenv
 

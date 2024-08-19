@@ -1,6 +1,6 @@
 from abc import ABC, abstractmethod
 import psycopg2
-from config import config
+from src.config import config
 
 
 class DBManager(ABC):
@@ -69,7 +69,7 @@ class VacanciesManager(DBManager):
         """
         )
         average_salary = self.cur.fetchone()[0]
-        return average_salary
+        return round(average_salary, 2) if average_salary is not None else 0.00
 
     def get_vacancies_with_higher_salary(self):
         """получение вакансий с зарплатой выше средней"""
@@ -117,7 +117,8 @@ if __name__ == "__main__":
     print(manager.get_all_vacancies())
 
     print("Средняя зарплата:")
-    print(round(manager.get_avg_salary()), 2)
+    average_salary = manager.get_avg_salary()
+    print(f"{average_salary:.2f}")
 
     print("Вакансии с зарплатой выше средней:")
     print(manager.get_vacancies_with_higher_salary())
