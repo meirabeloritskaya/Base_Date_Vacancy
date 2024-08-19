@@ -1,7 +1,7 @@
 import os
 from dotenv import load_dotenv
 from src.vacancy_api import HeadHunterAPI, employers_vacancies
-from src.create_db import create_database, save_data_to_database
+from src.create_db import PostgresDatabase
 from src.manager_db import VacanciesManager
 from src.config import config
 
@@ -15,8 +15,10 @@ def main():
     employer_ids = [561525, 1721871, 10438139, 9740285, 4667763, 985552, 2628254, 8932785, 1178077, 1455]
     data_vacancies = employers_vacancies(hh_api, employer_ids, per_page=50)
 
-    create_database(my_database_name, my_params)
-    save_data_to_database(data_vacancies, "vacancy_hh", my_params)
+    db_vacancy_hh = PostgresDatabase(my_params)
+    db_vacancy_hh.create_database(my_database_name)
+    db_vacancy_hh.create_tables(my_database_name)
+    db_vacancy_hh.save_data_to_database(data_vacancies, my_database_name)
 
     manager = VacanciesManager(my_database_name, my_params)
 
