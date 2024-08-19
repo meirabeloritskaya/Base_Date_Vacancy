@@ -87,14 +87,16 @@ class VacanciesManager(DBManager):
 
     def get_vacancies_with_keyword(self, keyword):
         """получение вакансий по ключевому слову"""
+        lower_keyword = keyword.lower()
+        upper_keyword = keyword.upper()
         self.cur.execute(
             """
             SELECT v.vacancy_name, v.vacancy_salary, v.salary_currency, v.vacancy_link, e.employer_name
             FROM vacancies v 
             JOIN employers e ON v.employer_id = e.employer_id
-            WHERE v.vacancy_name LIKE %s
+            WHERE LOWER(v.vacancy_name) LIKE %s OR UPPER(v.vacancy_name) LIKE %s
         """,
-            (f"%{keyword}%",),
+            (f"%{lower_keyword}%", f"%{upper_keyword}%"),
         )
         return self.cur.fetchall()
 
@@ -120,12 +122,12 @@ if __name__ == "__main__":
     print("Вакансии с зарплатой выше средней:")
     print(manager.get_vacancies_with_higher_salary())
 
-    keyword = input("Введите слово для поиска вакансий: ").strip().lower()
-    print(f"Вакансии с ключевым словом '{keyword}':")
-    vacancies = manager.get_vacancies_with_keyword(keyword)
+    my_keyword = input("Введите слово для поиска вакансий: ").strip()
+    print(f"Вакансии с ключевым словом '{my_keyword}':")
+    vacancies = manager.get_vacancies_with_keyword(my_keyword)
     if vacancies:
         for vacancy in vacancies:
             print(vacancy)
     else:
-        print(f"Вакансий с ключевым словом '{keyword}' не найдено.")
+        print(f"Вакансий с ключевым словом '{my_keyword}' не найдено.")
     manager.close_connection()
