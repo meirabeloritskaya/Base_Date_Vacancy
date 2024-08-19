@@ -31,7 +31,7 @@
 
 1. Клонируйте репозиторий:
 ```
-git clone https://github.com/meirabeloritskaya/search_vacancies.git
+git clone https://git@github.com:meirabeloritskaya/Base_Date_Vacancy.git
 ```
 2. Установите зависимости:
 ```
