@@ -7,7 +7,7 @@ from dotenv import load_dotenv
 
 logger = logging.getLogger(__name__)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-path = os.path.join(BASE_DIR, "logs", "api_service.log")
+path = os.path.join(BASE_DIR, "logs", "vacancy_api.log")
 file_handler = logging.FileHandler(path, encoding="utf-8")
 file_formatter = logging.Formatter("%(asctime)s - %(name)s - %(levelname)s: %(message)s")
 file_handler.setFormatter(file_formatter)
