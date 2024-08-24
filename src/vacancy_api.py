@@ -70,7 +70,7 @@ if __name__ == "__main__":
     hh_api = HeadHunterAPI(MY_BASE_URL)
 
     # Список работодателей для получения данных
-    employer_ids = [561525, 1721871, 10438139, 9740285, 4667763, 985552, 2628254, 8932785, 1178077, 1455]
+    employer_ids = [int(id) for id in os.getenv("EMPLOYER_IDS").split(",")]
 
     my_vacancies = employers_vacancies(hh_api, employer_ids, per_page=50)
     for vacancy in my_vacancies:

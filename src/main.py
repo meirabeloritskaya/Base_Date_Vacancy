@@ -8,12 +8,13 @@ from src.config import config
 
 def main():
     load_dotenv()
-    MY_BASE_URL = os.getenv("BASE_URL")
-    hh_api = HeadHunterAPI(MY_BASE_URL)
+    my_base_url = os.getenv("BASE_URL")
+    hh_api = HeadHunterAPI(my_base_url)
     my_database_name = "vacancy_hh"
     my_params = config()
-    employer_ids = [561525, 1721871, 10438139, 9740285, 4667763, 985552, 2628254, 8932785, 1178077, 1455]
-    data_vacancies = employers_vacancies(hh_api, employer_ids, per_page=50)
+
+    my_employer_ids = [int(id) for id in os.getenv("EMPLOYER_IDS").split(",")]
+    data_vacancies = employers_vacancies(hh_api, my_employer_ids, per_page=50)
 
     db_vacancy_hh = PostgresDatabase(my_params)
     db_vacancy_hh.create_database(my_database_name)
